@@ -44,7 +44,7 @@ const Add = {
 
         addFormRecord.classList.add('was-validated');
         await this._sendPost(userId);
-        this._refreshPage() ; 
+        // this._refreshPage() ; 
       },
       false,
     );
@@ -63,7 +63,7 @@ const Add = {
 
       // this._goToDashboardPage();
       try{
-        const response = await Transaction.addTransaction(id,formData) ;
+        const response = await Transaction.addTransaction(userId,formData) ;
         window.alert('Berhasil Menambahkan Transaksi Baru') ;  
       }
       catch(error) {

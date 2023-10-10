@@ -30,8 +30,9 @@ const Transaction = {
         return transactions;
     }, 
 
-    async addTransaction(id, {name,date, amount ,type, description,evidence}) {
-        const transactionRef = collection(db,`transaksiUser/${id}/transactionHistory`) ;  
+    async addTransaction(id, {name,date, amount ,type, description,evidence}) {        
+        console.log('ID User yang ditambahkan adalah  : ', id) ; 
+        const transactionRef = collection(db,`transaksiUser/${id}/transactionsHistory`) ;  
         // const data = {name, date, amount, type, description, evidence}; 
         return await addDoc(transactionRef, {
             name, 
