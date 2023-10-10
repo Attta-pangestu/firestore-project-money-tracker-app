@@ -163,9 +163,8 @@ const Dashboard = {
               <i class="bi bi-eye-fill me-1"></i>Show
             </a>
 
-            <a class="btn btn-sm btn-warning" href="/transactions/edit.html?id=${
-              transactionRecord.id
-            }">
+            <a class="btn btn-sm btn-warning" href="/transactions/edit.html?transactionId=${
+              transactionRecord.id}&userId=${this._userId}">
               <i 
                   class="bi bi-pen-fill me-1"
               ></i>Edit

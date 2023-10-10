@@ -7,7 +7,7 @@ const Add = {
     CheckUserAuth.checkLoginState() ; 
     this._initialUI();
     const userId = await Login._cekCurrentUser() ;
-    console.log('Sedang menambahkan data untuk user id : ' ,userId) ; 
+    // console.log('Sedang menambahkan data untuk user id : ' ,userId) ; 
     this._initialListener(userId);
   },
 

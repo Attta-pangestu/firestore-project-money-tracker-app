@@ -4,7 +4,7 @@ import Utlis from "../utlis/utlis";
 import {firebaseAuth , db } from "../utlis/firebase";
 import {
     // mendapatkan data dengan query di firestore
-    collection, getDocs, doc, where, query,
+    collection, getDocs, doc, where, query, getDoc,
     // menambahkan data di firestore
     addDoc
 } from 'firebase/firestore' ;
@@ -42,6 +42,15 @@ const Transaction = {
             description,
             evidence
         } ) ; 
+    }, 
+
+    async getIdTransaction(userID, transactionId) {
+        const pathRef = `transaksiUser/${userID}/transactionsHistory/${transactionId}` ; 
+        const transactionRef = doc(db, pathRef) ; 
+        const docSnapshot = await getDoc(transactionRef) ; 
+        console.log('Hasil get data sesuai ID dari modul Transaksi adalah : ') ;
+        console.log(docSnapshot.data()) ;
+        return docSnapshot.data() ; 
     }
 
     /* 

@@ -2,10 +2,11 @@ import CheckUserAuth from "../auth/check-user-auth";
 import Transaction from "../../network/transactions";
 
 const Edit = {
+  _userID : null, 
   async init() {
     this._initialUI();
     await this._initialData();
-    this._initialListener();
+    // this._initialListener();
   },
 
   _initialUI() {
@@ -32,21 +33,37 @@ const Edit = {
   },
 
   async _initialData() {
-    const transactionId = this._getTransactionId();
-    console.log('Transaksi IDnya adalah ', transactionId) ; 
+    const paramsId  = this._getTransactionId();
+    const transactionId = paramsId.transactionId ;
+    const userId =  paramsId.userId ; 
+  
     if (!transactionId) {
       alert(`Data dengan id ${transactionId} yang dicari tidak ditemukan`);
       return;
     }
-    // const fetchRecords = await fetch('/data/DATA.json');
-    // const responseRecords = await fetchRecords.json();
-    // const userTransactionsHistory = responseRecords.results.transactionsHistory;
 
-    const dataRecord = await this._getTransactionData(transactionId) ; 
-    console.log('Ini isi dari data Record') ; 
-    console.log(dataRecord) ; 
+    const dataRecord = await this._getTransactionData(userId, transactionId) ; 
+    const formattedDataRecord = this._changeDateFormat(dataRecord) ; 
+    console.log('Ini data yang diubah format tanggalnya') ; 
+    console.log(formattedDataRecord) ; 
+    this._populateTransactionToForm(formattedDataRecord);
 
-    this._populateTransactionToForm(dataRecord);
+    /* INI CARA DENGAN FETCH DENGAN DATA LOKAL 
+
+    const fetchRecords = await fetch('/data/DATA.json');
+    const responseRecords = await fetchRecords.json();
+    const userTransactionsHistory = responseRecords.results.transactionsHistory;
+    */ 
+  },
+
+  _changeDateFormat(dataRecord) {
+    const getDate = dataRecord.date.seconds ; 
+    const newDate = new Date( getDate * 1000) ; 
+    const formattedDate = newDate.toISOString().split('T')[0] ;   
+    return {
+      ...dataRecord,
+      date : formattedDate
+    }
   },
 
   _initialListener() {
@@ -64,11 +81,10 @@ const Edit = {
     );
   },
 
-  async _getTransactionData(id) {
+  async _getTransactionData(userId, transactionId) {
       try{
-        const response = await Transaction.getIdTransaction(id) ; 
-        console.log(response) ; 
-        return response.data.results ; 
+        const response = await Transaction.getIdTransaction(userId, transactionId) ; 
+        return response ; 
       }
       catch(error) {
         console.log('Terjadi Error Saat Mengambil Data Transaksi ID : ', error) ; 
@@ -164,7 +180,13 @@ const Edit = {
 
   _getTransactionId() {
     const searchParamEdit = new URLSearchParams(window.location.search);
-    return searchParamEdit.has('id') ? searchParamEdit.get('id') : null;
+    const paramsId = { 
+      transactionId : searchParamEdit.get('transactionId'), 
+      userId : searchParamEdit.get('userId') 
+    } ; 
+    return searchParamEdit.has('userId')  ? 
+      paramsId
+      : null;
   },
 
   _goToDashboardPage() {
