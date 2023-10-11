@@ -3,10 +3,12 @@ import Transaction from "../../network/transactions";
 
 const Edit = {
   _userID : null, 
+  _transactionId: null, 
+
   async init() {
     this._initialUI();
     await this._initialData();
-    // this._initialListener();
+    this._initialListener();
   },
 
   _initialUI() {
@@ -36,6 +38,9 @@ const Edit = {
     const paramsId  = this._getTransactionId();
     const transactionId = paramsId.transactionId ;
     const userId =  paramsId.userId ; 
+
+    this._userID = userId ; 
+    this._transactionId = transactionId; 
   
     if (!transactionId) {
       alert(`Data dengan id ${transactionId} yang dicari tidak ditemukan`);
@@ -101,7 +106,7 @@ const Edit = {
     } ; 
 
     try{
-      const response = await Transaction.editTransaction(this._getTransactionId(), formData) ;
+      const response = await Transaction.editTransaction(this._userID, this._transactionId, formData) ;
       window.alert('Perubahan Transaksi Telah Disimpan') ; 
     }
     catch(error) {
@@ -139,7 +144,7 @@ const Edit = {
       name: nameInput.value,
       amount: Number(amountInput.value),
       date: new Date(dateInput.value),
-      evidence: evidenceInput.files[0],
+      evidence: 'https://mekarisign.com/wp-content/uploads/2022/09/contoh-nota-debit-yang-merupakan-salah-satu-jenis-bukti-transaksi.webp' ,
       description: descriptionInput.value,
       type: typeInput.value,
     };

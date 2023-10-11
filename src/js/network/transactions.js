@@ -6,7 +6,9 @@ import {
     // mendapatkan data dengan query di firestore
     collection, getDocs, doc, where, query, getDoc,
     // menambahkan data di firestore
-    addDoc
+    addDoc,
+    // mengedit data atau doc
+    updateDoc
 } from 'firebase/firestore' ;
 import Config from "../config/config";
 
@@ -51,7 +53,15 @@ const Transaction = {
         console.log('Hasil get data sesuai ID dari modul Transaksi adalah : ') ;
         console.log(docSnapshot.data()) ;
         return docSnapshot.data() ; 
-    }
+    }, 
+
+    async editTransaction(userId, transactionId,  {name, date, amount, type, description, evidence}) {
+        const pathRef = `transaksiUser/${userId}/transactionsHistory/${transactionId}`;
+        const transactionRef = doc(db, pathRef);
+        const data = {name, date, amount, type, description, evidence}
+        console.log(data) ; 
+        return await updateDoc(transactionRef, data) ; 
+    }, 
 
     /* 
     =============================================
