@@ -22,8 +22,33 @@ const Dashboard = {
   },
 
   _initialListener() {
+    this._getDetailModal() ; 
+    this._getDeleteButtonEvent() ; 
+    
+  },
+
+  _getDeleteButtonEvent() {
+    const deleteRecordBtns = document.querySelectorAll('#recordsTable tbody a[id^="delete-"]') ; 
+    deleteRecordBtns.forEach((item) => {
+      item.addEventListener('click', 
+        async (event) => {
+          event.preventDefault() ;
+          const idTransaction = event.target.dataset.recordId ;
+          try {
+            const response =  await Transaction.deleteTransaction(this._userId, idTransaction) ; 
+            window.alert('Berhasil Menghapus Data Transaksi') ; 
+          }
+          catch(error) {
+            console.log(error) ;
+          }
+        }
+      )
+    });
+  }, 
+
+  _getDetailModal() {
     const recordDetailModal = document.getElementById('recordDetailModal');
-    recordDetailModal.addEventListener('show.bs.modal', (event) => {
+      recordDetailModal.addEventListener('show.bs.modal', (event) => {
       const modalTitle = recordDetailModal.querySelector('.modal-title');
       
       const button = event.relatedTarget;
@@ -33,24 +58,7 @@ const Dashboard = {
 
       this._populateDetailTransactionToModal(dataRecord);
     });
-
-    const deleteRecordBtns = document.querySelectorAll('#recordsTable tbody a[id^="delete-"]') ; 
-    deleteRecordBtns.forEach((item) => {
-      item.addEventListener('click', 
-        async (event) => {
-          event.preventDefault() ;
-          const idTransaction = event.target.dataset.recordId ;
-          try {
-            const response =  await Transaction.deleteTransactions(idTransaction) ; 
-            window.alert('Berhasil Menghapus Data Transaksi') ; 
-          }
-          catch(error) {
-            console.log(error) ;
-          }
-        }
-      )
-    });
-  },
+  }, 
 
 
   async _getTransactionData(id) {

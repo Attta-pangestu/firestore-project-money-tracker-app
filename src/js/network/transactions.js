@@ -8,7 +8,10 @@ import {
     // menambahkan data di firestore
     addDoc,
     // mengedit data atau doc
-    updateDoc
+    updateDoc, 
+    // menghapus data atau doc sesuai ID nya
+    deleteDoc, 
+
 } from 'firebase/firestore' ;
 import Config from "../config/config";
 
@@ -61,6 +64,12 @@ const Transaction = {
         const data = {name, date, amount, type, description, evidence}
         console.log(data) ; 
         return await updateDoc(transactionRef, data) ; 
+    }, 
+
+    async deleteTransaction(userId, transactionId) {
+        const pathRef = `transaksiUser/${userId}/transactionsHistory/${transactionId}`;
+        const transactionRef = doc(db, pathRef) ; 
+        return await deleteDoc(transactionRef) ; 
     }, 
 
     /* 
