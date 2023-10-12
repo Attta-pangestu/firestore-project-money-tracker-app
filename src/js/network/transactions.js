@@ -1,7 +1,7 @@
 import axios from "axios";
 import ApiEndpoint from "../config/api-endpoint";
 import Utlis from "../utlis/utlis";
-import {firebaseAuth , db } from "../utlis/firebase";
+import {firebaseAuth , db , storage } from "../utlis/firebase";
 import {
     // mendapatkan data dengan query di firestore
     collection, getDocs, doc, where, query, getDoc,
@@ -13,6 +13,17 @@ import {
     deleteDoc, 
 
 } from 'firebase/firestore' ;
+
+import {
+    // Path
+    ref,
+    // Untuk mengambil data berupa url 
+    getDownloadURL,
+    // Mengupload file ke cloud storage
+    uploadBytes, 
+    // Menghapus file
+    deleteObject
+} from 'firebase/storage' ; 
 import Config from "../config/config";
 
 const Transaction = {
@@ -34,7 +45,6 @@ const Transaction = {
         });
         return transactions;
     }, 
-
     async addTransaction(id, {name,date, amount ,type, description,evidence}) {        
         console.log('ID User yang ditambahkan adalah  : ', id) ; 
         const transactionRef = collection(db,`transaksiUser/${id}/transactionsHistory`) ;  
@@ -48,7 +58,6 @@ const Transaction = {
             evidence
         } ) ; 
     }, 
-
     async getIdTransaction(userID, transactionId) {
         const pathRef = `transaksiUser/${userID}/transactionsHistory/${transactionId}` ; 
         const transactionRef = doc(db, pathRef) ; 
@@ -57,7 +66,6 @@ const Transaction = {
         console.log(docSnapshot.data()) ;
         return docSnapshot.data() ; 
     }, 
-
     async editTransaction(userId, transactionId,  {name, date, amount, type, description, evidence}) {
         const pathRef = `transaksiUser/${userId}/transactionsHistory/${transactionId}`;
         const transactionRef = doc(db, pathRef);
@@ -71,6 +79,15 @@ const Transaction = {
         const transactionRef = doc(db, pathRef) ; 
         return await deleteDoc(transactionRef) ; 
     }, 
+
+    async uploadFile(file) {
+        const fileRef = ref(storage,`gs://dicoding-1-8dcb8.appspot.com/${file.name}`) ; 
+        return await uploadBytes(fileRef, file) ; 
+    },
+
+    async getFileUrl(fileRef) {
+        return await getDownloadURL(fileRef) ; 
+    }
 
     /* 
     =============================================

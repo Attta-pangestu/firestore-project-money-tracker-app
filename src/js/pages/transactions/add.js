@@ -63,7 +63,12 @@ const Add = {
 
       // this._goToDashboardPage();
       try{
-        const response = await Transaction.addTransaction(userId,formData) ;
+        const uploadFile = await Transaction.uploadFile(formData.evidence) ; 
+        const fileUrl = await Transaction.getFileUrl(uploadFile.ref) ; 
+        const uploadDatabase = await Transaction.addTransaction(userId,{
+          ...formData, 
+          evidence : fileUrl,
+        }) ;
         window.alert('Berhasil Menambahkan Transaksi Baru') ;  
       }
       catch(error) {
@@ -84,15 +89,16 @@ const Add = {
       name: nameInput.value,
       amount: Number(amountInput.value),
       date: new Date(dateInput.value),
-      evidence: 'https://img-core.ruangguru.com/question/S3sDGxEW9h2/b0e6f41eb8c361f6540d11c52d4f857243626239406185fbacc9520e0292231a.png?w=562&h=364',
+      evidence: evidenceInput.files[0] ,
       description: descriptionInput.value,
       type: typeInput.value,
     };
   },
 
+  
+
   _validateFormData(formData) {
     const formDataFiltered = Object.values(formData).filter((item) => item === '');
-
     return formDataFiltered.length === 0;
   },
 
