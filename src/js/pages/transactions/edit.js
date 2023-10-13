@@ -106,7 +106,12 @@ const Edit = {
     } ; 
 
     try{
-      const response = await Transaction.editTransaction(this._userID, this._transactionId, formData) ;
+      const uploadFIle = await Transaction.uploadFile(formData.evidence) ;
+      const getFileUrl = await Transaction.getFileUrl(uploadFIle.ref) ;  
+      const response = await Transaction.editTransaction(this._userID, this._transactionId, {
+        ...formData, 
+        evidence : getFileUrl, 
+      }) ;
       window.alert('Perubahan Transaksi Telah Disimpan') ; 
     }
     catch(error) {
@@ -144,7 +149,7 @@ const Edit = {
       name: nameInput.value,
       amount: Number(amountInput.value),
       date: new Date(dateInput.value),
-      evidence: 'https://mekarisign.com/wp-content/uploads/2022/09/contoh-nota-debit-yang-merupakan-salah-satu-jenis-bukti-transaksi.webp' ,
+      evidence: evidenceInput.files[0],
       description: descriptionInput.value,
       type: typeInput.value,
     };

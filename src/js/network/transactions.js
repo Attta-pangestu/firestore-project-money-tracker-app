@@ -84,11 +84,9 @@ const Transaction = {
         const fileRef = ref(storage,`gs://dicoding-1-8dcb8.appspot.com/${file.name}`) ; 
         return await uploadBytes(fileRef, file) ; 
     },
-
     async getFileUrl(fileRef) {
         return await getDownloadURL(fileRef) ; 
     }
-
     /* 
     =============================================
     MENGGUNAKAN AXIOS API
